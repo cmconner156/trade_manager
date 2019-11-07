@@ -1,0 +1,26 @@
+#TELEGRAM CONFIG
+#tg_session: unique name for your telegram session id
+tg_session: FXChannelCopy
+#tg_api_id: api_id from telegram
+tg_api_id: 123456
+#tg_api_hash: api_hash from telegram
+tg_api_hash: 7887290987345345098
+#tg_channel_prefix: DEPRECATED unique prefix when creating destination channels
+tg_channel_prefix: ChrisConner
+
+#DB CONFIG
+db_host: 192.168.1.10
+db_port: 3306
+db_user: forex
+db_pass: forex
+db_name: forex
+
+#TRADE CONFIG
+#forex_account_number: Destination forex account number
+forex_account_number: 23521352
+#lot_size: TOTAL LOT FOR EACH TRADE TO BE SPLIT UP
+lot_size: .03
+#spread_mod: number of pips to remove from the trade strategy TP to adjust for your broker.
+spread_mod: 3
+#pip_digits: does your broker take price in 4 digit or 5 digit prices
+pip_digits: 5

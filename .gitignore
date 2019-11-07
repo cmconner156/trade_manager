@@ -1,0 +1,5 @@
+## Ignore sessions
+*.session
+*.db
+__*
+*.yaml
