@@ -1,14 +1,14 @@
-FROM python:3.7.4-stretch
+FROM python:3
 MAINTAINER Chris Conner chrism.conner@gmail.com
 
 #Install forex stuff
-RUN pip install requests
-RUN pip install paho-mqtt
-RUN pip install flask
-RUN pip install flask_navigation
-RUN pip install psutil
-RUN pip install tablib
-RUN pip install pytz
+#RUN pip install requests
+#RUN pip install paho-mqtt
+#RUN pip install flask
+#RUN pip install flask_navigation
+#RUN pip install psutil
+#RUN pip install tablib
+#RUN pip install pytz
 RUN apt-get update && apt-get install -y supervisor
 
 #Make log dir for supervisor
@@ -20,12 +20,22 @@ COPY generic-python-flask-supervisord.conf /etc/supervisor/conf.d/generic-python
 # volumes
 VOLUME /application
 
+# workdir ?
+WORKDIR /app/
+
+#Install requirements
+ADD requirements.txt /app/requirements.txt
+RUN pip install -r requirements.txt
+
 #Environment variables
-ENV PORT 5000
-ENV PYTHONPATH /application
-ENV CWD	/application
+#ENV PORT 5000
+#ENV PYTHONPATH /application
+#ENV CWD	/application
 
 #Expose ports
-EXPOSE ${PORT}
+#EXPOSE ${PORT}
 
-CMD ["/usr/bin/supervisord"]
+#CMD ["/usr/bin/supervisord"]
+
+ENTRYPOINT ["python"]
+CMD ["./app.py","--host=0.0.0.0"]

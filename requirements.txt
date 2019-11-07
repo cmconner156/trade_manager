@@ -1,0 +1,7 @@
+Flask
+amqp
+celery
+pyyaml
+sqlalchemy
+mysqlclient
+telethon
