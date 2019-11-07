@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y supervisor
 RUN mkdir -p /var/log/supervisor
 
 #Copy supervisor conf and app
-COPY generic-python-flask-supervisord.conf /etc/supervisor/conf.d/generic-python-flask-supervisord.conf
+COPY trade-manager-supervisord.conf /etc/supervisor/conf.d/trade-manager-supervisord.conf
 
 # volumes
 VOLUME /application
