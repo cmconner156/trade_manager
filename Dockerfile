@@ -1,5 +1,6 @@
 FROM python:3
 MAINTAINER Chris Conner chrism.conner@gmail.com
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
 #Install forex stuff
 #RUN pip install requests
@@ -18,14 +19,16 @@ RUN mkdir -p /var/log/supervisor
 COPY trade-manager-supervisord.conf /etc/supervisor/conf.d/trade-manager-supervisord.conf
 
 # volumes
-VOLUME /application
+#VOLUME /application
 
-# workdir ?
-WORKDIR /app/
 
 #Install requirements
-ADD requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+WORKDIR /
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+RUN rm requirements.txt
+#ADD requirements.txt /app/requirements.txt
+#RUN pip install -r requirements.txt
 
 #Environment variables
 #ENV PORT 5000
@@ -36,6 +39,11 @@ RUN pip install -r requirements.txt
 #EXPOSE ${PORT}
 
 #CMD ["/usr/bin/supervisord"]
+
+COPY . /
+
+# workdir ?
+WORKDIR /app/
 
 ENTRYPOINT ["python"]
 CMD ["./app.py","--host=0.0.0.0"]

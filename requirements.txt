@@ -1,7 +1,11 @@
-Flask
+#Flask
 amqp
-celery
+#celery
 pyyaml
 sqlalchemy
 mysqlclient
 telethon
+celery==4.2.0
+Django==2.0.7
+djangorestframework==3.8.2
+requests==2.19.1

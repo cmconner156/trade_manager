@@ -1,5 +1,11 @@
 This is a telegram forex channel watcher designed to cleanup messages and send to a new channel.
 
+Credit
+
+https://github.com/xlwings/python-celery-dockerize-celery-django
+
+
+
 Requirements:
 
 - Python 3
@@ -15,6 +21,13 @@ pip3 install intrinio-sdk
 - Intrinio API Key
 - Telegram API Key and Hash Key
 
+
+docker-compose build
+docker-compose up -d
+docker-compose ps
+docker-compose logs
+docker-compose logs [service_name] -f --tail=10
+docker-compose exec -it web /bin/bash
 
 
 #Install
