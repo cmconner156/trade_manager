@@ -24,7 +24,7 @@ services:
     build: .
     command: bash -c "python3 manage.py collectstatic --no-input && python3 manage.py migrate && /wait-for-it.sh db:3306 -- gunicorn --timeout=30 --workers=2 --bind :8000 api.wsgi:application"
     env_file: &envfile
-      - /Users/cconner/PycharmProjects/env.env
+      - ./env.env
 #      - env.env
     volumes:
       - ./app:/app
