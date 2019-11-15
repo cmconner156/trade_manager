@@ -22,7 +22,7 @@ services:
     restart: "no"
     image: &app app
     build: .
-    command: bash -c "python3 manage.py collectstatic --no-input &&  /wait-for-it.sh db:3306 -- python3 manage.py migrate && gunicorn --timeout=30 --workers=2 --bind :8000 api.wsgi:application"
+    command: bash -c "python3 manage.py collectstatic --no-input && docker-compose exec app python3 /app/manage.py makemigrations &&  /wait-for-it.sh db:3306 -- python3 manage.py migrate && gunicorn --timeout=30 --workers=2 --bind :8000 api.wsgi:application"
     env_file: &envfile
       - ./env.env
 #      - env.env
@@ -61,7 +61,7 @@ services:
     restart: "no"
     image: *app
     build: .
-    command: bash -c "/wait-for-it.sh db:3306 -- /app/manage.py message_receiver 10"
+    command: bash -c "/wait-for-it.sh app:8000 -- /app/manage.py message_receiver 10"
     #    command: ["celery", "worker", "--app=worker.worker.app", "--concurrency=1", "--hostname=worker@%h", "--loglevel=INFO"]
     env_file: *envfile
     volumes:
