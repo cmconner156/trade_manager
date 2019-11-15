@@ -12,14 +12,13 @@ from api.tg_library import process_new_message, process_deleted_message
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
                     level=logging.INFO)
 
-from telethon import TelegramClient, events, sync
+from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 
-hostname = socket.gethostname()
 api_hash = settings.TELEGRAM['API_HASH']
 api_id = settings.TELEGRAM['API_ID']
 session = settings.TELEGRAM['SESSION']
-#channel_prefix = settings.TELEGRAM['CHANNEL_PREFIX']
-client = TelegramClient('%s-%s' % (session, hostname), api_id, api_hash)
+client = TelegramClient(StringSession(session), api_id, api_hash)
 
 class Command(BaseCommand):
     help = 'Just testing stuff'
