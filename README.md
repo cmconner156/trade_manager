@@ -38,17 +38,19 @@ TG_SESSION=lkjasdlfkjasdlfkajsdf209872408724SOMEREALLYREALLYREALLYLONGSTRING0987
 
 Now edit your env.env file, find the TELEGRAM section and add the output from the command
 
+Now we start the app!
+
+docker-compose up -d  
+
+Watch the logs for issues:  
+
+docker-compose logs -f  
 
 
 
 
 
 
-
-
-
-docker-compose up -d
-docker-compose logs -f
 docker-compose exec db mysql -h db -u trade_manager --password=password trade_manager
 docker-compose exec app python3 /app/manage.py makemigrations
 docker-compose exec app python3 /app/manage.py migrate --no-input
