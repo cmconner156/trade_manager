@@ -46,14 +46,65 @@ Watch the logs for issues:
 
 docker-compose logs -f  
 
+Make sure everything is started:  
+
+cconner@ubuntumt4:~/trade_manager$ docker ps
+CONTAINER ID        IMAGE                                COMMAND                  CREATED             STATUS              PORTS                                                    NAMES  
+939e14208a17        nginx:latest                         "nginx -g 'daemon of…"   4 minutes ago       Up 4 minutes        0.0.0.0:5555->5555/tcp, 80/tcp, 0.0.0.0:8000->8000/tcp   trade_manager_nginx_1  
+5edb5de75710        app                                  "bash -c '/wait-for-…"   5 minutes ago       Up 4 minutes        8000/tcp                                                 trade_manager_watcher_1  
+90292f07d297        app                                  "bash -c '/wait-for-…"   5 minutes ago       Up 4 minutes        8000/tcp                                                 trade_manager_worker_1  
+6c797d080f58        app                                  "bash -c '/wait-for-…"   5 minutes ago       Up 4 minutes        8000/tcp                                                 trade_manager_app_1  
+4a754b354b99        zoomeranalytics/flower:0.9.1-4.0.2   "/bin/bash /app/star…"   5 minutes ago       Up 4 minutes        5555/tcp                                                 trade_manager_flower_1  
+03b702716a34        mysql:5.7                            "docker-entrypoint.s…"   5 minutes ago       Up 5 minutes        3306/tcp, 33060/tcp                                      trade_manager_db_1  
+2e6df3f69671        rabbitmq:3                           "docker-entrypoint.s…"   5 minutes ago       Up 5 minutes        4369/tcp, 5671-5672/tcp, 25672/tcp                       trade_manager_broker_1  
+
+You should have 3 app containers, an nginx container, mysql container, rabbitmq container and flower container.  
+
+Now watch the logs for the telegram watcher:
+
+docker-compose logs -f watcher  
+
+You will see:  
+
+cconner@ubuntumt4:~/trade_manager$ docker-compose logs -f watcher
+Attaching to trade_manager_watcher_1
+watcher_1  | wait-for-it.sh: waiting 60 seconds for app:8000
+watcher_1  | wait-for-it.sh: app:8000 is available after 26 seconds
+watcher_1  | [ INFO/2019-11-15 21:33:47,638] telethon.crypto.aes: libssl detected, it will be used for encryption
+watcher_1  | [ INFO/2019-11-15 21:33:48,088] telethon.network.mtprotosender: Connecting to 149.154.175.57:443/TcpFull...
+watcher_1  | [ INFO/2019-11-15 21:33:48,126] telethon.network.mtprotosender: Connection to 149.154.175.57:443/TcpFull complete!
+
+
+Now create a private channel in Telegram and send a trade to it like:
+
+EURGBP SELL
+ENTRY: 0.86356
+TP: 0.86016
+SL: 0.86641
+
+You should see a message showing it came through:  
+
+watcher_1  | [ INFO/2019-11-15 21:41:44,481] root: NEW MESSAGE TO DB: NewMessage.Event(original_update=UpdateNewChannelMessage(message=Message(id=173, to_id=PeerChannel(channel_id=1256178279), date=datetime.datetime(2019, 11, 15, 21, 41, 44, tzinfo=datetime.timezone.utc), message='EURGBP SELL\nENTRY: 0.86356\nTP: 0.86016\nSL: 0.86641', out=True, mentioned=False, media_unread=False, silent=False, post=True, from_scheduled=False, legacy=False, edit_hide=False, from_id=None, fwd_from=None, via_bot_id=None, reply_to_msg_id=None, media=None, reply_markup=None, entities=[MessageEntityCode(offset=0, length=50)], views=1, edit_date=None, post_author=None, grouped_id=None, restriction_reason=[]), pts=182, pts_count=1), pattern_match=None, message=Message(id=173, to_id=PeerChannel(channel_id=1256178279), date=datetime.datetime(2019, 11, 15, 21, 41, 44, tzinfo=datetime.timezone.utc), message='EURGBP SELL\nENTRY: 0.86356\nTP: 0.86016\nSL: 0.86641', out=True, mentioned=False, media_unread=False, silent=False, post=True, from_scheduled=False, legacy=False, edit_hide=False, from_id=None, fwd_from=None, via_bot_id=None, reply_to_msg_id=None, media=None, reply_markup=None, entities=[MessageEntityCode(offset=0, length=50)], views=1, edit_date=None, post_author=None, grouped_id=None, restriction_reason=[]))  
+
+Now you should be able to check the database and see that same message:  
+
+docker-compose exec db mysql -h db -u trade_manager --password=password trade_manager -e "select * from api_tgmessage;"
+
+cconner@ubuntumt4:~/trade_manager$ docker-compose exec db mysql -h db -u trade_manager --password=password trade_manager -e "select * from api_tgmessage;"  
+mysql: [Warning] Using a password on the command line interface can be insecure.  
++----+------------+----------------+----------------------------+----------------------------+--------------------------------------------+------------+----------------------------------------------------+--------+-----+  
+| id | message_id | sender_id      | received_date              | message_date               | channel_name                               | channel_id | raw_text                                           | status | ack |  
++----+------------+----------------+----------------------------+----------------------------+--------------------------------------------+------------+----------------------------------------------------+--------+-----+  
+|  1 | 172        | -1001256178279 | 2019-11-15 21:35:26.906524 | 2019-11-15 21:35:26.906573 | ChrisConner - (PREMIUM) CHRIS GROUP1 - 1TP | 1256178279 | EURGBP SELL ENTRY: 0.86356 TP: 0.86016 SL: 0.86641 | NEW    |   0 |  
+|  2 | 173        | -1001256178279 | 2019-11-15 21:41:44.482039 | 2019-11-15 21:41:44.482093 | ChrisConner - (PREMIUM) CHRIS GROUP1 - 1TP | 1256178279 | EURGBP SELL ENTRY: 0.86356 TP: 0.86016 SL: 0.86641 | NEW    |   0 |  
++----+------------+----------------+----------------------------+----------------------------+--------------------------------------------+------------+----------------------------------------------------+--------+-----+  
 
 
 
 
 
-docker-compose exec db mysql -h db -u trade_manager --password=password trade_manager
-docker-compose exec app python3 /app/manage.py makemigrations
-docker-compose exec app python3 /app/manage.py migrate --no-input
+
+
 
 Credit
 
@@ -70,26 +121,7 @@ Requirements:
 
 pip3 install telethon
 
-- Intrinio forex subscription $20.  Temporary for now.
-
-pip3 install intrinio-sdk
-
-- Intrinio API Key
 - Telegram API Key and Hash Key
 
 
-docker-compose build
-docker-compose up -d
-docker-compose ps
-docker-compose logs
-docker-compose logs [service_name] -f --tail=10
-docker-compose exec -it web /bin/bash
-
-
-#Install
-#/usr/local/bin/pip3 install telethon
-#/usr/local/bin/pip3 install intrinio-sdk
-#/usr/local/bin/pip3 install mysqlclient
-#/usr/local/bin/pip3 install sqlalchemy
-#/usr/local/bin/pip3 install pyyaml
 

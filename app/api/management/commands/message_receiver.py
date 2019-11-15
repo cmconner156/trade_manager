@@ -35,17 +35,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        print("settings:%s" % settings)
-        print("settings.TELEGRAM: %s" % settings.TELEGRAM)
-        if api_hash is not None:
-            print("api_hash:%s" % api_hash)
-        else:
-            print("something is broken")
-        if api_id is not None:
-            print("api_id:%s" % api_id)
-        else:
-            print("something is broken")
-
         with client:
             client.run_until_disconnected()
 
