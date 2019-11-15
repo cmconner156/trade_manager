@@ -11,6 +11,6 @@ Django==2.0.7
 gunicorn
 django-mysql
 djangorestframework==3.8.2
-requests==2.19.1
+requests==2.20.0
 
 
