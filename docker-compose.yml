@@ -22,7 +22,7 @@ services:
     restart: "no"
     image: &app app
     build: .
-    command: bash -c "python3 manage.py collectstatic --no-input && python3 manage.py makemigrations &&  /wait-for-it.sh db:3306 -t 60 -- python3 manage.py migrate && gunicorn --timeout=30 --workers=2 --bind :8000 api.wsgi:application"
+    command: bash -c "python3 manage.py collectstatic --no-input && python3 manage.py makemigrations api &&  /wait-for-it.sh db:3306 -t 60 -- python3 manage.py migrate --no-input api && gunicorn --timeout=30 --workers=2 --bind :8000 api.wsgi:application"
     env_file: &envfile
       - ./env.env
 #      - env.env
