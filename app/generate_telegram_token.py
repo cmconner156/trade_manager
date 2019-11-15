@@ -23,7 +23,13 @@ if os.environ.get('DOCKERCONTAINER', None) is None or 'trade_manager' not in os.
 with TelegramClient(StringSession(), api_id, api_hash) as client:
     print("Put this in the TG_SESSION= section of your env.env")
     print("Don't forget to include TG_API_ID= and TG_API_HASH= as well based on same entries from this command")
-    print(client.session.save())
+    session = client.session.save()
+    print(session)
+    print("Your env.env TELEGRAM section should look like:")
+    print("TG_API_ID=%s" % api_id)
+    print("TG_API_HASH=%s" % api_hash)
+    print("TG_SESSION=%s" % session)
+
 
 
 
