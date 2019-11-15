@@ -38,3 +38,11 @@ def get(request, slug, format=None):
     except:
         logger.info(f'{path}: content is not json')
     return Response(s)
+
+@api_view(['GET'])
+def telegram_api(request):
+    return Response("This is telegram api")
+
+@api_view(['GET'])
+def trade_api(request):
+    return Response("This is trade api")

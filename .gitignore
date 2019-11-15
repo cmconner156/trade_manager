@@ -3,6 +3,7 @@
 *.db
 __*
 *.yaml
+*mysql*
 
 app/data/
 !test.env

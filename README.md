@@ -1,8 +1,18 @@
 This is a telegram forex channel watcher designed to cleanup messages and send to a new channel.
 
+
+docker-compose build
+docker-compose up -d
+docker-compose logs -f
+docker-compose exec db mysql -h db -u root --password=password
+docker-compose exec db mysql -h db -u trade_manager --password=password
+docker-compose exec app python3 /app/manage.py makemigrations
+docker-compose exec app python3 /app/manage.py migrate --no-input
+
 Credit
 
 https://github.com/xlwings/python-celery-dockerize-celery-django
+http://nisanthsojan.com/django-mysql-gunicorn-nginx-with-docker%e2%80%8a-a-step-by-step-guide/
 
 
 
