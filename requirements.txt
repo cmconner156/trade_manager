@@ -10,7 +10,7 @@ celery==4.2.0
 Django==2.0.7
 gunicorn
 django-mysql
-djangorestframework==3.8.2
+djangorestframework==3.9.1
 requests==2.19.1
 
 
