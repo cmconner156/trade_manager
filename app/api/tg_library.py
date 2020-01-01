@@ -1,6 +1,7 @@
 import re
 import logging
 
+import django.db
 from api.models import TGMessage
 
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
@@ -17,6 +18,8 @@ def process_new_message(event):
               'channel_id': event.message.to_id.channel_id, \
               'raw_text': event.raw_text, \
               'status': "NEW"}
+
+    django.db.close_old_connections()
     message = TGMessage.objects.create_message(**kwargs)
   else:
     logging.info("NEW MESSAGE NO DB: %s" % event)

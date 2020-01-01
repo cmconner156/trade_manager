@@ -22,3 +22,7 @@ def fetch_data_from_quandl(self, database_code, dataset_code):
         logger.info(f'Write data to {slug}')
         with open(os.path.join(settings.DATA_PATH, slug), 'w') as f:
             f.write(response.text)
+
+@app.task(bind=True, name='christest')
+def christest(self, blah ):
+    print(blah)
