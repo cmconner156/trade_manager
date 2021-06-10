@@ -7,7 +7,7 @@ sqlalchemy
 mysqlclient
 telethon
 celery==4.2.0
-Django==2.0.7
+Django==2.2.24
 gunicorn
 django-mysql
 djangorestframework==3.8.2
