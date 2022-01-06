@@ -6,7 +6,7 @@ pyyaml
 sqlalchemy
 mysqlclient
 telethon
-celery==4.2.0
+celery==5.2.2
 Django==2.0.7
 gunicorn
 django-mysql
